@@ -194,7 +194,11 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
               }
             }
             if (isset($doc->wijknaam)) {
+              if (isset($doc->wijkcode)) {
+                  $builder->addAdminLevel(3, $doc->wijknaam, $doc->wijkcode);
+              } else {
                 $builder->addAdminLevel(3, $doc->wijknaam);
+              }
             }
             if (isset($doc->gemeentenaam)) {
                 $builder->addAdminLevel(2, $doc->gemeentenaam, $doc->gemeentecode);
