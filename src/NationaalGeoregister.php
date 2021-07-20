@@ -200,12 +200,12 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                 $builder->addAdminLevel(3, $doc->wijknaam);
               }
             }
-            // if (isset($doc->gemeentenaam)) {
-            //     $builder->addAdminLevel(2, $doc->gemeentenaam, $doc->gemeentecode);
-            // }
-            // if (isset($doc->provincienaam)) {
-            //     $builder->addAdminLevel(1, $doc->provincienaam, $doc->provinciecode);
-            // }
+            if (isset($doc->gemeentenaam)) {
+                $builder->addAdminLevel(2, $doc->gemeentenaam, print_r($doc, true));
+            }
+            if (isset($doc->provincienaam)) {
+                $builder->addAdminLevel(1, $doc->provincienaam, $doc->provinciecode);
+            }
             $builder->setCountry('Netherlands');
             $builder->setCountryCode('NL');
             $builder->setTimezone('Europe/Amsterdam');
