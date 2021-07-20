@@ -177,6 +177,16 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     {
         $results = $this->getResultsForQuery($query);
 
+
+        $test = array_merge(
+            static::DEFAULT_OPTIONS,
+            $this->options,
+            static::REQUIRED_OPTIONS_GEOCODE,
+            [
+                'rows' => 10,
+                'q'    => $query,
+            ]);
+
         $addresses = [];
         foreach ($results->response->docs as $doc) {
             $position = explode(' ', trim(str_replace(['POINT(', ')'], '', $doc->centroide_ll)));
@@ -203,7 +213,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
               }
             }
             if (isset($doc->gemeentenaam)) {
-                $builder->addAdminLevel(2, $doc->gemeentenaam, sprintf(self::ENDPOINT_URL_FREE, http_build_query($this->getGeocodeOptions($query))));
+                $builder->addAdminLevel(2, $doc->gemeentenaam, sprintf(self::ENDPOINT_URL_FREE, http_build_query($test)));
             }
             if (isset($doc->provincienaam)) {
                 $builder->addAdminLevel(1, $doc->provincienaam, $doc->provinciecode);
