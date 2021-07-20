@@ -42,7 +42,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
      */
     const DEFAULT_OPTIONS = [
         'bq' => 'type:gemeente^0.5 type:woonplaats^0.5 type:weg^1.0 type:postcode^1.5 type:adres^1.5',
-        'fl' => 'centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode',
+        'fl' => 'centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
     ];
 
     /**
@@ -175,16 +175,6 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     {
         $results = $this->getResultsForQuery($query);
 
-
-        $test = array_merge(
-            static::DEFAULT_OPTIONS,
-            $this->options,
-            static::REQUIRED_OPTIONS_GEOCODE,
-            [
-                'rows' => 10,
-                'q'    => $query,
-            ]);
-
         $addresses = [];
         foreach ($results->response->docs as $doc) {
             $position = explode(' ', trim(str_replace(['POINT(', ')'], '', $doc->centroide_ll)));
@@ -211,7 +201,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
               }
             }
             if (isset($doc->gemeentenaam)) {
-                $builder->addAdminLevel(2, $doc->gemeentenaam, sprintf(self::ENDPOINT_URL_FREE, http_build_query($test)));
+                $builder->addAdminLevel(2, $doc->gemeentenaam, $doc->gemeentecode);
             }
             if (isset($doc->provincienaam)) {
                 $builder->addAdminLevel(1, $doc->provincienaam, $doc->provinciecode);
