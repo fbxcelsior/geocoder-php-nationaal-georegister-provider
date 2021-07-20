@@ -203,7 +203,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
               }
             }
             if (isset($doc->gemeentenaam)) {
-                $builder->addAdminLevel(2, $doc->gemeentenaam, print_r($doc, true));
+                $builder->addAdminLevel(2, $doc->gemeentenaam, print_r($results, true));
             }
             if (isset($doc->provincienaam)) {
                 $builder->addAdminLevel(1, $doc->provincienaam, $doc->provinciecode);
