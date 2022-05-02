@@ -28,6 +28,16 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     protected const ENDPOINT_URL_REVERSE = 'https://geodata.nationaalgeoregister.nl/locatieserver/revgeo?%s';
 
     /**
+     * @var string
+     */
+    protected const ENDPOINT_URL_SUGGEST = 'https://geodata.nationaalgeoregister.nl/locatieserver/suggest?%s';
+
+    /**
+     * @var string
+     */
+    protected const ENDPOINT_URL_LOOKUP = 'https://geodata.nationaalgeoregister.nl/locatieserver/lookup?%s';
+
+    /**
      * @var string[]
      */
     protected const BLACKLISTED_OPTIONS = [
@@ -48,6 +58,13 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @var array
      */
+    protected const DEFAULT_OPTIONS_SUGGEST = [
+        'fl' => 'id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+    ];
+
+    /**
+     * @var array
+     */
     protected const REQUIRED_OPTIONS_GEOCODE = [];
 
     /**
@@ -56,6 +73,11 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     protected const REQUIRED_OPTIONS_REVERSE = [
         'type' => 'adres',
     ];
+
+    /**
+     * @var array
+     */
+    protected const REQUIRED_OPTIONS_SUGGEST = [];
 
     /**
      * @var array
@@ -159,6 +181,43 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     }
 
     /**
+     * @param \Geocoder\Query\GeocodeQuery $query
+     *
+     * @throws \Geocoder\Exception\InvalidServerResponse
+     * @throws \Geocoder\Exception\UnsupportedOperation
+     *
+     * @return \Geocoder\Collection
+     */
+    public function suggestQuery(GeocodeQuery $query): Collection
+    {
+        // This API doesn't handle IPs.
+        if (filter_var($query->getText(), FILTER_VALIDATE_IP)) {
+            throw new UnsupportedOperation('The NationaalGeoregister provider does not support IP addresses.');
+        }
+
+        return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query))));
+    }
+
+    /**
+     * @param \Geocoder\Query\GeocodeQuery $query
+     *
+     * @return array
+     */
+    protected function getSuggestOptions(GeocodeQuery $query): array
+    {
+        return array_merge(
+            static::DEFAULT_OPTIONS_SUGGEST,
+            $this->options,
+            array_diff_key($query->getAllData(), array_fill_keys(self::BLACKLISTED_OPTIONS, true)),
+            static::REQUIRED_OPTIONS_SUGGEST,
+            [
+                'rows' => $query->getLimit(),
+                'q' => $query->getText(),
+            ]
+        );
+    }
+
+    /**
      * @return string
      */
     public function getName(): string
@@ -190,9 +249,9 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             $builder->setLocality($doc->woonplaatsnaam ?? null);
             if (isset($doc->buurtnaam)) {
               if (isset($doc->buurtcode)) {
-                  $builder->addAdminLevel(4, $doc->buurtnaam, $doc->buurtcode);
+                  $builder->addAdminLevel(5, $doc->buurtnaam, $doc->buurtcode);
               } else {
-                $builder->addAdminLevel(4, $doc->buurtnaam);
+                $builder->addAdminLevel(5, $doc->buurtnaam);
               }
             }
             if (isset($doc->wijknaam)) {
