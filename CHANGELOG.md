@@ -8,6 +8,20 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 - Nothing
 
+## [1.4.0] - 2021-12-13
+
+### Added
+
+- Allow setting options per query using query data.
+
+### Fixed
+
+- Added (protected) visibility keyword to constants. Although this can be considered a breaking change, we consider it a bugfix as they were never meant to be public.
+
+### Removed
+
+- PHP <7.3 support
+
 ## [1.3.0] - 2021-01-18
 
 ### Added
