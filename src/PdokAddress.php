@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Swis\Geocoder\PdokAddress;
+namespace Swis\Geocoder\NationaalGeoregister;
 
 use Geocoder\Model\Address;
 

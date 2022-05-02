@@ -14,7 +14,7 @@ use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use Http\Client\HttpClient;
-use Swis\Geocoder\PdokAddress\PdokAddress;
+use Swis\Geocoder\NationaalGeoregister\PdokAddress;
 
 class NationaalGeoregister extends AbstractHttpProvider implements Provider
 {
