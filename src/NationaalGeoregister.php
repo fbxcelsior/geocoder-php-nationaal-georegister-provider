@@ -14,6 +14,7 @@ use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use Http\Client\HttpClient;
+use Swis\Geocoder\PdokAddress\PdokAddress;
 
 class NationaalGeoregister extends AbstractHttpProvider implements Provider
 {
@@ -271,7 +272,12 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             $builder->setCountryCode('NL');
             $builder->setTimezone('Europe/Amsterdam');
 
-            $addresses[] = $builder->build();
+            /** @var PdokAddress $address */
+            $address = $builder->build(PdokAddress::class);
+            $address = $address->witType($doc->type);
+            $address = $address->withId($doc->id);
+
+            $addresses[] = $address;
         }
 
         return new AddressCollection($addresses);
