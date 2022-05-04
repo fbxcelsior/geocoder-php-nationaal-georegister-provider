@@ -60,7 +60,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
      * @var array
      */
     protected const DEFAULT_OPTIONS_SUGGEST = [
-        'fl' => 'id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
     ];
 
     /**
