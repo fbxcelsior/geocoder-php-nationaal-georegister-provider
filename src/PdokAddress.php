@@ -97,6 +97,7 @@ final class PdokAddress extends Address
 
         $rv["type"] = $this->getType();
         $rv["id"] = $this->getId();
+        $rv["address"] = $this->getAddress();
 
 
         return $rv;
