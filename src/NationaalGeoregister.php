@@ -276,6 +276,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             $address = $builder->build(PdokAddress::class);
             $address = $address->witType($doc->type);
             $address = $address->withId($doc->id);
+            $address = $address->withDisplayAddress($doc->weergavenaam);
 
             $addresses[] = $address;
         }

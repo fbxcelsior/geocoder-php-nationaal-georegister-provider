@@ -22,6 +22,12 @@ final class PdokAddress extends Address
     private $type;
 
     /**
+     * @var string|null
+     *
+     */
+    private $displayAddress;
+
+    /**
      * @param string|null $id
      *
      * @return PdokAddress
@@ -61,6 +67,27 @@ final class PdokAddress extends Address
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param string|null $displayAddress
+     *
+     * @return PdokAddress
+     */
+    public function withDisplayAddress(string $displayAddress = null): self
+    {
+        $new = clone $this;
+        $new->displayAddress = $displayAddress;
+
+        return $new;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDisplayAddress()
+    {
+        return $this->displayAddress;
     }
 
 
