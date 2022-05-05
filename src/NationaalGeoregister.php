@@ -14,7 +14,6 @@ use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use Http\Client\HttpClient;
-use Swis\Geocoder\NationaalGeoregister\PdokAddress;
 
 class NationaalGeoregister extends AbstractHttpProvider implements Provider
 {
@@ -100,8 +99,8 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     protected $options = [];
 
     /**
-     * @param \Http\Client\HttpClient $client An HTTP adapter
-     * @param array $options Extra query parameters (optional)
+     * @param \Http\Client\HttpClient $client  An HTTP adapter
+     * @param array                   $options Extra query parameters (optional)
      */
     public function __construct(HttpClient $client, array $options = [])
     {
@@ -129,10 +128,10 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param \Geocoder\Query\GeocodeQuery $query
      *
-     * @return \Geocoder\Collection
      * @throws \Geocoder\Exception\UnsupportedOperation
-     *
      * @throws \Geocoder\Exception\InvalidServerResponse
+     *
+     * @return \Geocoder\Collection
      */
     public function geocodeQuery(GeocodeQuery $query): Collection
     {
@@ -166,9 +165,9 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param \Geocoder\Query\ReverseQuery $query
      *
-     * @return \Geocoder\Collection
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
+     * @return \Geocoder\Collection
      */
     public function reverseQuery(ReverseQuery $query): Collection
     {
@@ -197,11 +196,12 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
 
     /**
      * @param \Geocoder\Query\GeocodeQuery $query
+     * @param mixed                        $type
+     *
+     * @throws \Geocoder\Exception\UnsupportedOperation
+     * @throws \Geocoder\Exception\InvalidServerResponse
      *
      * @return \Geocoder\Collection
-     * @throws \Geocoder\Exception\UnsupportedOperation
-     *
-     * @throws \Geocoder\Exception\InvalidServerResponse
      */
     public function suggestQuery(GeocodeQuery $query, $type = 'adres'): Collection
     {
@@ -221,11 +221,11 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             case 'postcode':
                 return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
         }
-
     }
 
     /**
      * @param \Geocoder\Query\GeocodeQuery $query
+     * @param mixed                        $type
      *
      * @return array
      */
@@ -241,7 +241,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                     static::REQUIRED_OPTIONS_SUGGEST,
                     [
                         'rows' => $query->getLimit(),
-                        'q' => str_replace(' ', '+', $query->getText()) . '+and+type:' . $type . '+and+postcode:*',
+                        'q' => $query->getText().' and type:'.$type.' and postcode:*',
                     ]
                 );
 
@@ -253,7 +253,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                     static::REQUIRED_OPTIONS_SUGGEST,
                     [
                         'rows' => $query->getLimit(),
-                        'q' => str_replace(' ', '+', $query->getText()) . '+and+type:' . $type,
+                        'q' => $query->getText().' and type:'.$type,
                     ]
                 );
 
@@ -265,11 +265,10 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                     static::REQUIRED_OPTIONS_SUGGEST,
                     [
                         'rows' => $query->getLimit(),
-                        'q' => str_replace(' ', '+', $query->getText()) . '+and+type:' . $type,
+                        'q' => $query->getText().' and type:'.$type,
                     ]
                 );
         }
-
     }
 
     /**
@@ -283,9 +282,9 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param string $query
      *
-     * @return \Geocoder\Model\AddressCollection
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
+     * @return \Geocoder\Model\AddressCollection
      */
     protected function executeQuery(string $query): AddressCollection
     {
@@ -297,7 +296,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
 
             $builder = new AddressBuilder($this->getName());
 
-            $builder->setCoordinates((float)$position[1], (float)$position[0]);
+            $builder->setCoordinates((float) $position[1], (float) $position[0]);
             $builder->setStreetNumber($doc->huis_nlt ?? $doc->huisnummer ?? null);
             $builder->setStreetName($doc->straatnaam ?? null);
             $builder->setPostalCode($doc->postcode ?? null);
@@ -341,9 +340,9 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param string $query
      *
-     * @return \stdClass
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
+     * @return \stdClass
      */
     protected function getResultsForQuery(string $query): \stdClass
     {
