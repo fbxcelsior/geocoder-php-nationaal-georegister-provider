@@ -213,13 +213,13 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
         switch ($type) {
             default:
             case 'adres':
-                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
+                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))), $type);
 
             case 'weg':
-                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
+                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))), $type);
 
             case 'postcode':
-                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
+                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))), $type);
         }
     }
 
@@ -286,7 +286,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
      *
      * @return \Geocoder\Model\AddressCollection
      */
-    protected function executeQuery(string $query): AddressCollection
+    protected function executeQuery(string $query, $type = 'free'): AddressCollection
     {
         $results = $this->getResultsForQuery($query);
 
@@ -325,14 +325,23 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             $builder->setCountryCode('NL');
             $builder->setTimezone('Europe/Amsterdam');
 
-            /** @var PdokAddress $address */
-            $address = $builder->build(PdokAddress::class);
-            $address = $address->witType($doc->type);
-            $address = $address->withId($doc->id);
-            $address = $address->withAddress($doc->weergavenaam);
-            $address = $address->withGeometry($doc->geometrie_rd);
+            if($type != 'free') {
+                /** @var PdokAddress $address */
+                $address = $builder->build(PdokAddress::class);
+                $address = $address->witType($doc->type);
+                $address = $address->withId($doc->id);
+                $address = $address->withAddress($doc->weergavenaam);
+                $address = $address->withGeometry($doc->geometrie_rd);
 
-            $addresses[] = $address;
+                $addresses[] = $address;
+            } else {
+                /** @var PdokAddress $address */
+                $address = $builder->build(PdokAddress::class);
+
+                $addresses[] = $address;
+            }
+
+
         }
 
         return new AddressCollection($addresses);
