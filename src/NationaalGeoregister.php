@@ -52,7 +52,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
      */
     protected const DEFAULT_OPTIONS = [
         'bq' => 'type:gemeente^0.5 type:woonplaats^0.5 type:weg^1.0 type:postcode^1.5 type:adres^1.5',
-        'fl' => 'geometrie_rd,weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+        'fl' => 'centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
     ];
 
     /**
