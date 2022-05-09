@@ -59,21 +59,21 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
      * @var array
      */
     protected const DEFAULT_OPTIONS_SUGGEST_HOUSE = [
-        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode,geometrie_rd',
     ];
 
     /**
      * @var array
      */
     protected const DEFAULT_OPTIONS_SUGGEST_STREET = [
-        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode,geometrie_rd',
     ];
 
     /**
      * @var array
      */
     protected const DEFAULT_OPTIONS_SUGGEST_POSTCODE = [
-        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode,geometrie_rd',
     ];
 
     /**
@@ -330,6 +330,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             $address = $address->witType($doc->type);
             $address = $address->withId($doc->id);
             $address = $address->withAddress($doc->weergavenaam);
+            $address = $address->withGeometry($doc->geometrie_rd);
 
             $addresses[] = $address;
         }

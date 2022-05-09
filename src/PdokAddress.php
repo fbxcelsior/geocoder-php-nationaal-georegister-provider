@@ -28,6 +28,12 @@ final class PdokAddress extends Address
     private $address;
 
     /**
+     * @var string|null
+     *
+     */
+    private $geometry;
+
+    /**
      * @param string|null $id
      *
      * @return PdokAddress
@@ -90,6 +96,27 @@ final class PdokAddress extends Address
         return $this->address;
     }
 
+    /**
+     * @param string|null $geometry
+     *
+     * @return PdokAddress
+     */
+    public function withGeometry(string $geometry = null): self
+    {
+        $new = clone $this;
+        $new->geometry = $geometry;
+
+        return $new;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGeometry()
+    {
+        return $this->geometry;
+    }
+
 
     public function toArray(): array
     {
@@ -98,6 +125,7 @@ final class PdokAddress extends Address
         $rv["type"] = $this->getType();
         $rv["id"] = $this->getId();
         $rv["address"] = $this->getAddress();
+        $rv["geometry"] = $this->getGeometry();
 
 
         return $rv;
