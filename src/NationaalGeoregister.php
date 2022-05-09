@@ -51,8 +51,8 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
      * @var array
      */
     protected const DEFAULT_OPTIONS = [
-        'bq' => 'type:gemeente^0.5 type:woonplaats^0.5 type:weg^1.0 type:postcode^1.5 type:adres^1.5',
-        'fl' => 'centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode',
+        //'bq' => 'type:gemeente^0.5 type:woonplaats^0.5 type:weg^1.0 type:postcode^1.5 type:adres^1.5',
+        'fl' => 'weergavenaam,id,type,centroide_ll,huis_nlt,huisnummer,straatnaam,postcode,woonplaatsnaam,gemeentenaam,gemeentecode,provincienaam,provinciecode,buurtnaam,buurtcode,wijknaam,wijkcode,geometrie_rd',
     ];
 
     /**
@@ -99,8 +99,8 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     protected $options = [];
 
     /**
-     * @param \Http\Client\HttpClient $client  An HTTP adapter
-     * @param array                   $options Extra query parameters (optional)
+     * @param \Http\Client\HttpClient $client An HTTP adapter
+     * @param array $options Extra query parameters (optional)
      */
     public function __construct(HttpClient $client, array $options = [])
     {
@@ -128,10 +128,10 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param \Geocoder\Query\GeocodeQuery $query
      *
-     * @throws \Geocoder\Exception\UnsupportedOperation
+     * @return \Geocoder\Collection
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
-     * @return \Geocoder\Collection
+     * @throws \Geocoder\Exception\UnsupportedOperation
      */
     public function geocodeQuery(GeocodeQuery $query): Collection
     {
@@ -165,9 +165,9 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param \Geocoder\Query\ReverseQuery $query
      *
+     * @return \Geocoder\Collection
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
-     * @return \Geocoder\Collection
      */
     public function reverseQuery(ReverseQuery $query): Collection
     {
@@ -196,12 +196,12 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
 
     /**
      * @param \Geocoder\Query\GeocodeQuery $query
-     * @param mixed                        $type
-     *
-     * @throws \Geocoder\Exception\UnsupportedOperation
-     * @throws \Geocoder\Exception\InvalidServerResponse
+     * @param mixed $type
      *
      * @return \Geocoder\Collection
+     * @throws \Geocoder\Exception\InvalidServerResponse
+     *
+     * @throws \Geocoder\Exception\UnsupportedOperation
      */
     public function suggestQuery(GeocodeQuery $query, $type = 'adres'): Collection
     {
@@ -213,19 +213,19 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
         switch ($type) {
             default:
             case 'adres':
-                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))), $type);
+                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
 
             case 'weg':
-                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))), $type);
+                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
 
             case 'postcode':
-                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))), $type);
+                return $this->executeQuery(sprintf(self::ENDPOINT_URL_SUGGEST, http_build_query($this->getSuggestOptions($query, $type))));
         }
     }
 
     /**
      * @param \Geocoder\Query\GeocodeQuery $query
-     * @param mixed                        $type
+     * @param mixed $type
      *
      * @return array
      */
@@ -241,7 +241,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                     static::REQUIRED_OPTIONS_SUGGEST,
                     [
                         'rows' => $query->getLimit(),
-                        'q' => $query->getText().' and type:'.$type.' and postcode:*',
+                        'q' => $query->getText() . ' and type:' . $type . ' and postcode:*',
                     ]
                 );
 
@@ -253,7 +253,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                     static::REQUIRED_OPTIONS_SUGGEST,
                     [
                         'rows' => $query->getLimit(),
-                        'q' => $query->getText().' and type:'.$type,
+                        'q' => $query->getText() . ' and type:' . $type,
                     ]
                 );
 
@@ -265,7 +265,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
                     static::REQUIRED_OPTIONS_SUGGEST,
                     [
                         'rows' => $query->getLimit(),
-                        'q' => $query->getText().' and type:'.$type,
+                        'q' => $query->getText() . ' and type:' . $type,
                     ]
                 );
         }
@@ -282,11 +282,11 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param string $query
      *
+     * @return \Geocoder\Model\AddressCollection
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
-     * @return \Geocoder\Model\AddressCollection
      */
-    protected function executeQuery(string $query, $type = 'free'): AddressCollection
+    protected function executeQuery(string $query): AddressCollection
     {
         $results = $this->getResultsForQuery($query);
 
@@ -296,7 +296,7 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
 
             $builder = new AddressBuilder($this->getName());
 
-            $builder->setCoordinates((float) $position[1], (float) $position[0]);
+            $builder->setCoordinates((float)$position[1], (float)$position[0]);
             $builder->setStreetNumber($doc->huis_nlt ?? $doc->huisnummer ?? null);
             $builder->setStreetName($doc->straatnaam ?? null);
             $builder->setPostalCode($doc->postcode ?? null);
@@ -325,22 +325,14 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
             $builder->setCountryCode('NL');
             $builder->setTimezone('Europe/Amsterdam');
 
-            if($type != 'free') {
-                /** @var PdokAddress $address */
-                $address = $builder->build(PdokAddress::class);
-                $address = $address->witType($doc->type);
-                $address = $address->withId($doc->id);
-                $address = $address->withAddress($doc->weergavenaam);
-                $address = $address->withGeometry($doc->geometrie_rd);
+            /** @var PdokAddress $address */
+            $address = $builder->build(PdokAddress::class);
+            $address = $address->witType($doc->type);
+            $address = $address->withId($doc->id);
+            $address = $address->withAddress($doc->weergavenaam);
+            $address = $address->withGeometry($doc->geometrie_rd);
 
-                $addresses[] = $address;
-            } else {
-                /** @var PdokAddress $address */
-                $address = $builder->build(PdokAddress::class);
-
-                $addresses[] = $address;
-            }
-
+            $addresses[] = $address;
 
         }
 
@@ -350,9 +342,9 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @param string $query
      *
+     * @return \stdClass
      * @throws \Geocoder\Exception\InvalidServerResponse
      *
-     * @return \stdClass
      */
     protected function getResultsForQuery(string $query): \stdClass
     {
