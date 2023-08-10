@@ -6,7 +6,23 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [Unreleased]
 
-- Nothing
+- Nothing.
+
+## [1.6.0] - 2023-04-07
+
+### Changed
+
+- Migrated to the new service URL. [#8](https://github.com/swisnl/geocoder-php-nationaal-georegister-provider/pull/8)
+
+## [1.5.0] - 2022-08-16
+
+### Changed
+
+- Expect a PSR-18 client instead of a PHP-HTTP client. N.B. PHP-HTTP clients implement this interface, so it should not be a breaking change.
+
+### Removed
+
+- PHP <7.4 support
 
 ## [1.4.0] - 2021-12-13
 

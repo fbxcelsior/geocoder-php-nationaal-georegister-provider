@@ -1,6 +1,6 @@
 {
     "name": "swisnl/geocoder-php-nationaal-georegister-provider",
-    "description": "Nationaal Georegister provider for Geocoder PHP",
+    "description": "PDOK (formerly Nationaal Georegister) provider for Geocoder PHP",
     "type": "library",
     "keywords": [
         "swisnl",
@@ -12,14 +12,14 @@
     ],
     "homepage": "https://github.com/swisnl/geocoder-php-nationaal-georegister-provider",
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
-        "geocoder-php/common-http": "^4.0",
-        "willdurand/geocoder": "^4.0"
+        "geocoder-php/common-http": "^4.5",
+        "willdurand/geocoder": "^4.6"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.4",
-        "geocoder-php/provider-integration-tests": "^1.5",
+        "friendsofphp/php-cs-fixer": "^3.9",
+        "geocoder-php/provider-integration-tests": "^1.6",
         "php-http/curl-client": "^2.0",
         "phpunit/phpunit": "^9.0"
     },
@@ -36,7 +36,10 @@
         }
     ],
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "scripts": {
         "test": "phpunit",

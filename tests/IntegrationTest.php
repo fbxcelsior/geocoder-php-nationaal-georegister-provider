@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace Swis\Geocoder\NationaalGeoregister\Tests;
 
 use Geocoder\IntegrationTest\ProviderIntegrationTest;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientInterface;
 use Swis\Geocoder\NationaalGeoregister\NationaalGeoregister;
 
 class IntegrationTest extends ProviderIntegrationTest
 {
     protected $skippedTests = [
         'testGeocodeQuery' => 'Geocoding an address in the UK is not supported by this provider',
+        'testReverseQueryWithNoResults' => 'This provider will always return a result',
     ];
-
-    protected $testReverse = false;
 
     protected $testIpv4 = false;
 
     protected $testIpv6 = false;
 
-    protected function createProvider(HttpClient $httpClient)
+    protected function createProvider(ClientInterface $httpClient)
     {
         return new NationaalGeoregister($httpClient);
     }

@@ -1,16 +1,18 @@
-# Nationaal Georegister provider for Geocoder PHP
+# PDOK (formerly Nationaal Georegister) provider for Geocoder PHP
 
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/swisnl/geocoder-php-nationaal-georegister-provider.svg?style=flat-square)](https://packagist.org/packages/swisnl/geocoder-php-nationaal-georegister-provider)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/swisnl/geocoder-php-nationaal-georegister-provider.svg?style=flat-square)](https://packagist.org/packages/swisnl/geocoder-php-nationaal-georegister-provider)
 [![Software License](https://img.shields.io/packagist/l/swisnl/geocoder-php-nationaal-georegister-provider.svg?style=flat-square)](LICENSE.md) 
 [![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen.svg?style=flat-square)](https://plant.treeware.earth/swisnl/geocoder-php-nationaal-georegister-provider)
-[![Build Status](https://img.shields.io/travis/swisnl/geocoder-php-nationaal-georegister-provider/master.svg?style=flat-square)](https://travis-ci.org/swisnl/geocoder-php-nationaal-georegister-provider)
+[![Build Status](https://img.shields.io/github/checks-status/swisnl/geocoder-php-nationaal-georegister-provider/master?label=tests)](https://github.com/swisnl/geocoder-php-nationaal-georegister-provider/actions/workflows/tests.yml)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/swisnl/geocoder-php-nationaal-georegister-provider.svg?style=flat-square)](https://scrutinizer-ci.com/g/swisnl/geocoder-php-nationaal-georegister-provider/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/swisnl/geocoder-php-nationaal-georegister-provider.svg?style=flat-square)](https://scrutinizer-ci.com/g/swisnl/geocoder-php-nationaal-georegister-provider)
 [![Total Downloads](https://img.shields.io/packagist/dt/swisnl/geocoder-php-nationaal-georegister-provider.svg?style=flat-square)](https://packagist.org/packages/swisnl/geocoder-php-nationaal-georegister-provider)
 [![Made by SWIS](https://img.shields.io/badge/%F0%9F%9A%80-made%20by%20SWIS-%230737A9.svg?style=flat-square)](https://www.swis.nl)
 
-This is the [Nationaal Georegister](https://geodata.nationaalgeoregister.nl/) provider for the [PHP Geocoder](https://github.com/geocoder-php/Geocoder), which uses the [PDOK Locatieserver v3 (Dutch)](https://www.pdok.nl/diensten#PDOK%20Locatieserver).
+## :warning: Please make sure you update to at least [1.6.0](https://github.com/swisnl/geocoder-php-nationaal-georegister-provider/releases/tag/1.6.0) before August 2023 :warning:
+
+This is the [PDOK](https://www.pdok.nl/) (formerly Nationaal Georegister) provider for the [PHP Geocoder](https://github.com/geocoder-php/Geocoder), which uses the [PDOK Locatieserver v3 (Dutch)](https://www.pdok.nl/introductie/-/article/pdok-locatieserver-1).
 It can geocode addresses (not IP addresses) and reverse geocode coordinates.
 
 Please note that this provider can only (reverse) geocode addresses in The Netherlands!
@@ -25,19 +27,19 @@ $ composer require swisnl/geocoder-php-nationaal-georegister-provider
 
 ### HTTP Client
 
-PHP Geocoder is decoupled from any HTTP messaging client with the help of [PHP-HTTP](http://php-http.org/).
-This requires another package providing [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation).
-To use Guzzle 6, for example, simply require `php-http/guzzle6-adapter`:
+PHP Geocoder is decoupled from any HTTP messaging client with the help of [PSR-18 HTTP Client](https://www.php-fig.org/psr/psr-18/).
+This requires another package providing [psr/http-client-implementation](https://packagist.org/providers/psr/http-client-implementation).
+To use Guzzle 7, for example, simply require `guzzlehttp/guzzle`:
 
 ``` bash
-$ composer require php-http/guzzle6-adapter
+$ composer require guzzlehttp/guzzle
 ```
 
 ## Usage
 
 ``` php
 // Create geocoder
-$client = new \Http\Client\Curl\Client();
+$client = new \GuzzleHttp\Client();
 $geocoder = new \Swis\Geocoder\NationaalGeoregister\NationaalGeoregister($client);
 
 // Geocode!
@@ -70,7 +72,7 @@ Example using extra options:
 
 ``` php
 // On the geocoder instance:
-$client = new \Http\Client\Curl\Client();
+$client = new \GuzzleHttp\Client();
 $options = ['fq' => 'bron:BAG'];
 $geocoder = new \Swis\Geocoder\NationaalGeoregister\NationaalGeoregister($client, $options);
 
