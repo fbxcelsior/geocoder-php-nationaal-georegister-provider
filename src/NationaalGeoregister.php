@@ -30,12 +30,12 @@ class NationaalGeoregister extends AbstractHttpProvider implements Provider
     /**
      * @var string
      */
-    protected const ENDPOINT_URL_SUGGEST = 'https://geodata.nationaalgeoregister.nl/locatieserver/suggest?%s';
+    protected const ENDPOINT_URL_SUGGEST = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?%s';
 
     /**
      * @var string
      */
-    protected const ENDPOINT_URL_LOOKUP = 'https://geodata.nationaalgeoregister.nl/locatieserver/lookup?%s';
+    protected const ENDPOINT_URL_LOOKUP = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/lookup?%s';
 
     /**
      * @var string[]
