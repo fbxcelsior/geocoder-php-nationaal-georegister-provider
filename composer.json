@@ -11,6 +11,12 @@
         "provider"
     ],
     "homepage": "https://github.com/swisnl/geocoder-php-nationaal-georegister-provider",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/fbxcelsior/Geocoder"
+        }
+    ],
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
